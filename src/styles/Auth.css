@@ -1,0 +1,74 @@
+/* Container */
+.auth-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Headings */
+.auth-container h2 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 25px;
+}
+
+/* Form Fields */
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-container input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Buttons */
+.auth-container button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background-color: #3498db;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s all;
+}
+
+.auth-container button:hover {
+  background-color: #2980b9;
+}
+
+/* Error / Message */
+.auth-container .message {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #e74c3c;
+}
+
+.auth-container .success {
+  color: #27ae60;
+}
+
+/* Links */
+.auth-container .switch-link {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+.auth-container .switch-link a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.auth-container .switch-link a:hover {
+  text-decoration: underline;
+}

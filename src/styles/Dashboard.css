@@ -1,0 +1,163 @@
+/* Dashboard Grid Layout */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(5, auto);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* Grid sections */
+.grid-1 {
+  grid-area: 1 / 1 / 3 / 3;
+}
+
+.grid-2 {
+  grid-area: 3 / 1 / 4 / 3;
+}
+
+.grid-3 {
+  grid-area: 4 / 1 / 5 / 3;
+}
+
+.grid-4 {
+  grid-area: 5 / 1 / 6 / 3;
+}
+
+/* Optional: card styling for each section */
+.dashboard-card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Data Entry */ 
+.data-entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.data-entry-form input,
+.data-entry-form select {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.data-entry-form button {
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
+.data-entry-form input:disabled,
+.data-entry-form select:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.data-entry-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.expense { color: red; }
+.income { color: green; }
+
+ul li button {
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+
+ul li button:hover {
+  opacity: 0.8;
+}
+
+ul li button:first-of-type {
+  background-color: #f1c40f; /* edit */
+  color: #fff;
+}
+
+ul li button:last-of-type {
+  background-color: #e74c3c; /* delete */
+  color: #fff;
+}
+
+ul li.updated {
+  background-color: #dff0d8;
+  transition: background-color 1s ease;
+}
+
+.updated {
+  background-color: #dff0d8; /* light green */
+  transition: background-color 1s ease;
+}
+
+/* Feedback Messages */
+.feedback {
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-weight: 500;
+  animation: slideDown 0.3s ease-out;
+}
+
+.feedback-success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.feedback-error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  margin-top: 12px;
+  padding: 8px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+
+
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .grid-1,
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-area: auto;
+  }
+}
