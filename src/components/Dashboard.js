@@ -170,7 +170,7 @@ const handleformSubmit = async (transactionData) => {
 
   <div className="dashboard-grid">
 
-    {/* 🔹 GRID 1: Summary */}
+    {/* GRID 1: Summary */}
     <div className="dashboard-card grid-1">
       <h3>Summary</h3>
       <p>Income: ₱{incomeTotal}</p>
@@ -178,7 +178,7 @@ const handleformSubmit = async (transactionData) => {
       <strong>Balance: ₱{balance}</strong>
     </div>
 
-    {/* 🔹 GRID 2: Filters */}
+    {/* GRID 2: Filters */}
     <div className="dashboard-card grid-2">
       <h3>Filters</h3>
 
@@ -205,7 +205,7 @@ const handleformSubmit = async (transactionData) => {
       </select>
     </div>
 
-    {/* 🔹 GRID 3: Charts */}
+    {/* GRID 3: Charts */}
     <div className="dashboard-card grid-3">
       <h3>Income vs Expense</h3>
       <Bar data={barData} />
@@ -217,7 +217,7 @@ const handleformSubmit = async (transactionData) => {
       <Line data={trendData} />
     </div>
 
-     {/* 🔹 GRID 4: Transactions */}
+     {/*  GRID 4: Transactions */}
 <div className="dashboard-card grid-4">
   <h3>{editingTransaction ? "Edit Transaction" : "Add Transaction"}</h3>
   

@@ -1,70 +1,67 @@
-# Getting Started with Create React App
+# Finance Tracking App — Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains the React frontend for the Finance Tracking App — a minimal personal finance tracker with transaction entry, reporting charts, and account auth.
 
-## Available Scripts
+Key features
+- Add, edit, and delete transactions (income / expense)
+- Monthly filters, category breakdown, and charts (Bar, Pie, Line)
+- Authentication (register / login / logout)
 
-In the project directory, you can run:
+Live API (backend)
+- The frontend expects the backend API at `http://localhost:5000` (see `frontend/src/api.js`). Make sure the backend server is running on port 5000 and connected to the database.
 
-### `npm start`
+Getting started (development)
+1. Install dependencies
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+cd frontend
+npm install
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. Run the app
 
-### `npm test`
+```bash
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The app will open at `http://localhost:3000`. It communicates with the backend at `http://localhost:5000/api` (session cookies enabled).
 
-### `npm run build`
+Build for production
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm run build
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+This produces a production build in the `build/` folder which can be served by a static server or integrated with the backend.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+API endpoints used by the frontend
+- `POST /api/register` — register a new user
+- `POST /api/login` — login (session cookie returned)
+- `POST /api/logout` — logout (destroys session)
+- `GET /api/me` — get current user
+- `GET /api/transactions` — list user transactions
+- `POST /api/transaction` — add a transaction
+- `PUT /api/transaction/:id` — update a transaction
+- `POST /api/request-reset` — request password reset
+- `POST /api/reset-password` — submit new password
 
-### `npm run eject`
+Configuration & environment
+- The frontend does not require environment variables by default. It communicates with the backend at `http://localhost:5000/api` as configured in `frontend/src/api.js`.
+- The backend requires DB credentials and server configuration — see `backend/index.js` and set corresponding `DB_*` and session env vars in the backend `.env`.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+UX notes
+- Form submissions show inline feedback and a loading indicator (the form is disabled while saving).
+- Transactions are persisted to the backend; local state updates are synchronized with server responses.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Troubleshooting
+- If you see CORS/session issues, ensure the backend `cors` config allows `http://localhost:3000` and `credentials: true`.
+- If transactions appear in the UI but aren't persisted, confirm the backend is running and the database is reachable.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Contributing
+- Feel free to open issues or submit PRs. Small improvements welcome: better validation, more charts, pagination, or test coverage.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+License
+- MIT
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Contact
+- For questions about the repo, open an issue or reach out to the project owner.
