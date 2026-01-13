@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getTransactions, logout, addTransaction, updateTransaction } from "../api";
+import { getTransactions, logout, addTransaction, updateTransaction, deleteTransaction } from "../api";
 import TransactionForm from "./TransactionForm";
 import { Bar, Pie, Line } from "react-chartjs-2";
 import "../utils/chartSetup";
@@ -86,10 +86,19 @@ const handleformSubmit = async (transactionData) => {
 
 
 
-  const handleDelete = (id) => {
-  // delete transaction from state / API
-  setTransactions(prev => prev.filter(t => t.id !== id));
-};
+  const handleDelete = async (id) => {
+    setFeedback(null);
+    try {
+      await deleteTransaction(id);
+      setTransactions(prev => prev.filter(t => t.id !== id));
+      setFeedback({ type: 'success', message: 'Transaction deleted successfully!' });
+      setTimeout(() => setFeedback(null), 5000);
+    } catch (err) {
+      console.error(err);
+      setFeedback({ type: 'error', message: err.response?.data?.error || 'Failed to delete transaction' });
+      setTimeout(() => setFeedback(null), 5000);
+    }
+  };
 
 
   

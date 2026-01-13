@@ -11,6 +11,7 @@ export const addTransaction = (data) => API.post("/transaction", data);
 export const updateTransaction = (id, data) => API.put(`/transaction/${id}`, data);
 export const getTransactions = () => API.get("/transactions");
 export const getMe = () => API.get("/me");
+export const deleteTransaction = (id) => API.delete(`/transaction/${id}`);
 
 export const requestPasswordReset = (email) =>
   API.post("/request-reset", { email });

@@ -11,3 +11,13 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Chart Color Scheme */
+:root {
+  --income-color: #10b981;
+  --income-dark: #059669;
+  --expense-color: #ef4444;
+  --expense-dark: #dc2626;
+  --income-light: rgba(16, 185, 129, 0.1);
+  --expense-light: rgba(239, 68, 68, 0.1);
+}
