@@ -23,10 +23,23 @@ export default function Dashboard() {
     load();
   }, []);
 
-const[editingTransaction, setEditingTransaction] = useState(null);
+const [editingTransaction, setEditingTransaction] = useState(null);
+const [categoryColors, setCategoryColors] = useState({});
+const [trendColors, setTrendColors] = useState({
+  income: "#10b981",
+  expense: "#ef4444"
+});
 
 const handleEditing = (transaction) => {
   setEditingTransaction(transaction);
+};
+
+const handleColorChange = (category, color) => {
+  setCategoryColors(prev => ({ ...prev, [category]: color }));
+};
+
+const handleTrendColorChange = (type, color) => {
+  setTrendColors(prev => ({ ...prev, [type]: color }));
 };
 
 const handleformSubmit = async (transactionData) => {
@@ -39,29 +52,13 @@ const handleformSubmit = async (transactionData) => {
     
     if (isEditing) {
       // EDIT existing transaction
-      res = await fetch(`http://localhost:5000/api/transaction/${transactionData.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(transactionData),
-        credentials: "include" // send session cookie
-      });
+      res = await updateTransaction(transactionData.id, transactionData);
     } else {
       // ADD new transaction
-      res = await fetch("http://localhost:5000/api/transaction", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(transactionData),
-        credentials: "include" // send session cookie
-      });
+      res = await addTransaction(transactionData);
     }
 
-    const savedTransaction = await res.json();
-
-    if (!res.ok) {
-      setFeedback({ type: 'error', message: savedTransaction.error || "Error saving transaction" });
-      setIsLoading(false);
-      return;
-    }
+    const savedTransaction = res.data;
 
     // Update local state
     if (isEditing) {
@@ -74,13 +71,14 @@ const handleformSubmit = async (transactionData) => {
       setFeedback({ type: 'success', message: 'Transaction added successfully!' });
     }
 
+    setLastUpdatedId(savedTransaction.id);
     setEditingTransaction(null);
     // Clear feedback after 5 seconds
     setTimeout(() => setFeedback(null), 5000);
 
   } catch (err) {
     console.error(err);
-    setFeedback({ type: 'error', message: 'Failed to save transaction' });
+    setFeedback({ type: 'error', message: err.response?.data?.error || 'Failed to save transaction' });
   } finally {
     setIsLoading(false);
   }
@@ -126,11 +124,32 @@ const handleformSubmit = async (transactionData) => {
         (categoryTotals[t.category] || 0) + Number(t.amount);
     });
 
+  // Initialize category colors when categories change
+  useEffect(() => {
+    const categories = Object.keys(categoryTotals);
+    setCategoryColors(prev => {
+      const updated = { ...prev };
+      categories.forEach(cat => {
+        if (!updated[cat]) {
+          // Generate random color if not set
+          updated[cat] = "#" + ((1 << 24) * Math.random() | 0).toString(16);
+        }
+      });
+      return updated;
+    });
+  }, [categoryTotals]);
+
 
   // Chart data
   const barData = {
     labels: ["Income", "Expense"],
-    datasets: [{ label: "Amount", data: [incomeTotal, expenseTotal] }],
+    datasets: [{ 
+      label: "Amount", 
+      data: [incomeTotal, expenseTotal],
+      backgroundColor: ["#10b981", "#ef4444"],
+      borderColor: ["#059669", "#dc2626"],
+      borderWidth: 1
+    }],
   };
 
   const pieData = {
@@ -138,9 +157,7 @@ const handleformSubmit = async (transactionData) => {
     datasets: [
       {
         data: Object.values(categoryTotals),
-        backgroundColor: Object.keys(categoryTotals).map(
-          cat => "#"+((1<<24)*Math.random()|0).toString(16) // simple random colors
-        ),
+        backgroundColor: Object.keys(categoryTotals).map(cat => categoryColors[cat] || "#cccccc"),
       },
     ],
   };
@@ -157,8 +174,20 @@ const handleformSubmit = async (transactionData) => {
   const trendData = {
     labels: dates,
     datasets: [
-      { label: "Income", data: dates.map(d => groupedByDate[d].income) },
-      { label: "Expense", data: dates.map(d => groupedByDate[d].expense) },
+      { 
+        label: "Income", 
+        data: dates.map(d => groupedByDate[d].income),
+        borderColor: trendColors.income,
+        backgroundColor: trendColors.income.replace(')', ', 0.1)').replace('rgb', 'rgba'),
+        tension: 0.4
+      },
+      { 
+        label: "Expense", 
+        data: dates.map(d => groupedByDate[d].expense),
+        borderColor: trendColors.expense,
+        backgroundColor: trendColors.expense.replace(')', ', 0.1)').replace('rgb', 'rgba'),
+        tension: 0.4
+      },
     ],
   };
 
@@ -213,8 +242,47 @@ const handleformSubmit = async (transactionData) => {
       <h3>Expenses by Category</h3>
       <Pie data={pieData} />
 
+      {/* Category Color Editor */}
+      <h3>Category Colors</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {Object.keys(categoryTotals).map(category => (
+          <div key={category} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <label style={{ flex: 1 }}>{category}</label>
+            <input
+              type="color"
+              value={categoryColors[category] || "#cccccc"}
+              onChange={(e) => handleColorChange(category, e.target.value)}
+              style={{ width: '50px', height: '36px', cursor: 'pointer' }}
+            />
+          </div>
+        ))}
+      </div>
+
       <h3>Income vs Expense Trend</h3>
       <Line data={trendData} />
+
+      {/* Trend Color Editor */}
+      <h3>Trend Colors</h3>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <label style={{ flex: 1 }}>Income</label>
+          <input
+            type="color"
+            value={trendColors.income}
+            onChange={(e) => handleTrendColorChange('income', e.target.value)}
+            style={{ width: '50px', height: '36px', cursor: 'pointer' }}
+          />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <label style={{ flex: 1 }}>Expense</label>
+          <input
+            type="color"
+            value={trendColors.expense}
+            onChange={(e) => handleTrendColorChange('expense', e.target.value)}
+            style={{ width: '50px', height: '36px', cursor: 'pointer' }}
+          />
+        </div>
+      </div>
     </div>
 
      {/*  GRID 4: Transactions */}
@@ -244,7 +312,7 @@ const handleformSubmit = async (transactionData) => {
         className={`${t.type} ${t.id === lastUpdatedId ? "updated" : ""}`}
       >
         {t.date} | {t.category} | {t.type} | ₱{t.amount}
-        <button onClick={() => setEditingTransaction(t)}>Edit</button>
+        <button onClick={() => handleEditing(t)}>Edit</button>
         <button onClick={() => handleDelete(t.id)}>Delete</button>
       </li>
     ))}
